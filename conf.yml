@@ -1,0 +1,15 @@
+
+
+mqtt_address:  192.168.4.100
+mqtt_port:     1883
+mqtt_clientid: "mqtt2influxdb"
+mqtt_topic:
+  - "$SYS/#"
+
+
+
+influxdb_address:  192.168.4.100
+influxdb_port:     8086
+influxdb_schema:   "mqtt2influxdb"
+#influxdb_user:     "mqtt2influxdb"
+#influxdb_password: "mqtt2influxdb"
