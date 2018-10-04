@@ -64,6 +64,11 @@ def on_connect(client, userdata, flags, rc):
         print("- {}".format(t))
 
 
+def on_disconnect(client, userdata, rc):
+    cfg, writer = userdata
+    print("Mqtt broker {}:{} DISCONNECTED".format(cfg["mqtt_address"], cfg["mqtt_port"]))
+
+
 def on_message(client, userdata, msg):
     message = msg.payload.decode("utf-8")
     is_float_value = False
@@ -107,6 +112,7 @@ def main():
     # Initialize the mqtt_cli that should connect to the Mosquitto broker
     mqtt_cli = mqtt.Client(client_id=cfg["mqtt_clientid"], userdata=(cfg, writer))
     mqtt_cli.on_connect = on_connect
+    mqtt_cli.on_disconnect = on_disconnect
     mqtt_cli.on_message = on_message
     connOK = False
 
