@@ -22,7 +22,7 @@ class InfluxDbWriter(object):
         if hasattr(self, "influxdb"):
             self.influxdb.close()
         self.influxdb = InfluxDBClient(host=self.addr, port=self.port,
-                                       database=self.sch)  # username=self.user, password=self.pwd)
+                                       database=self.sch, timeout=3, retries=2)  # username=self.user, password=self.pwd)
         try:
             version = self.influxdb.ping()
             if version:
@@ -55,10 +55,10 @@ class InfluxDbWriter(object):
 
 def on_connect(client, userdata, flags, rc):
     cfg, writer = userdata
-    print("Mqtt broker {}:{} connected with result code {}".format(cfg["mqtt_address"],cfg["mqtt_port"], rc))
+    print("Mqtt broker {}:{} connected. Result: {}".format(cfg["mqtt_address"], cfg["mqtt_port"], mqtt.connack_string(rc)))
 
     print("Mqtt subscribtion:")
-    topics = cfg["mqtt_topic"]
+    topics = cfg["mqtt_topics"]
     for t in topics:
         client.subscribe(t)
         print("- {}".format(t))
