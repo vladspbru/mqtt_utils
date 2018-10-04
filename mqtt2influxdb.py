@@ -109,7 +109,6 @@ def main():
 
     writer = InfluxDbWriter(cfg)
 
-    # Initialize the mqtt_cli that should connect to the Mosquitto broker
     mqtt_cli = mqtt.Client(client_id=cfg["mqtt_clientid"], userdata=(cfg, writer))
     mqtt_cli.on_connect = on_connect
     mqtt_cli.on_disconnect = on_disconnect
@@ -123,7 +122,7 @@ def main():
         except:
             connOK = False
             print("Bad connection to broker  {}:{} ".format(cfg["mqtt_address"], cfg["mqtt_port"]))
-        time.sleep(3)
+            time.sleep(3)
 
     # Blocking loop to the Mosquitto broker
     mqtt_cli.loop_forever()
