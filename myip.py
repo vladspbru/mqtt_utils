@@ -12,7 +12,6 @@ urls = [
     , 'http://ip.42.pl/raw'
 ]
 
-
 def main():
     connOK = True
     while (connOK):
@@ -29,6 +28,9 @@ def main():
             #                , client_id=cfg["consumer"]["mqtt"]["client_id"]
             #                , keepalive=7
             #                )
+            #myIp = re.compile('(\d{1,3}\.){3}\d{1,3}').search(res.text).group()
+            #if myIp != "":
+            #   print(myIp)
             time.sleep(10)
         except:
             type, value, traceback = sys.exc_info()

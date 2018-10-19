@@ -80,37 +80,58 @@ def str_is_boolean(v):
     return res
 
 
-def on_message(client, userdata, msg):
-    message = msg.payload.decode("utf-8")
 
+
+def simple_translater(topic, mes):
+    jso=None
     val = None
     # is number
     try:
-        val = float(message)
+        val = float(mes)
     except:
         val = None
 
     # is boolean
     if val == None:
-        val = str_is_boolean(message)
+        val = str_is_boolean(mes)
 
     if val != None:
         # Use utc as timestamp
         receiveTime = datetime.datetime.utcnow()
-        json_body = [
+        jso = [
             {
                 "time": receiveTime,
-                "measurement": msg.topic,
+                "measurement": topic,
                 "fields": {
                     "value": val
                 }
             }
         ]
-        cfg, writer = userdata
-        writer.write(json_body)
-        print("{} | {} | {} ".format(str(receiveTime), msg.topic, val))
+        print("{} | {} | {} ".format(str(receiveTime), topic, val))
+    return jso
+
+def json_translater(topic, mes):
+    jso=None
+
+    print("json: {} {} ".format(topic, mes))
+    return jso
+
+
+
+def on_message(client, userdata, msg):
+    message = msg.payload.decode("utf-8")
+
+    jso = None
+    if message.startswith('{'):
+        jso = json_translater(msg.topic, message)
     else:
-        print("no float, number or boolean\n{} | {} ".format(msg.topic, message))
+        jso = simple_translater(msg.topic, message)
+
+    if jso != None:
+        cfg, writer = userdata
+        writer.write(jso)
+    else:
+        print("no float, number or boolean on: {} | {} ".format(msg.topic, message))
 
 
 def main():
